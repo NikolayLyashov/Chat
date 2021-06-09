@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import '../../assets/application.scss';
 
 const Form = () => (
   <form className="w-50">
