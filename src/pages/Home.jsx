@@ -1,9 +1,8 @@
 import React from 'react';
+import { Navigation } from '../components/Navigation';
 
 export const Home = () => (
-  <div>
-    <h1>Home</h1>
-  </div>
+  <Navigation />
 );
 
 export default Home;
