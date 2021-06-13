@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import axios from 'axios';
 import { Navigation } from '../components/Navigation';
-import AuthorizationContext from '../context';
 
 export const Home = () => {
-  const data = useContext(AuthorizationContext);
-  console.log(data);
+  const token = localStorage.getItem('token');
+  axios.get('/api/v1/data', { Headers: { Authorization: `Bearer ${token}` } });
+
   return (
     <Navigation />
   );

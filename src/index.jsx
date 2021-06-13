@@ -6,14 +6,14 @@ import { App } from './App';
 import '../assets/application.scss';
 import 'core-js/stable/index';
 import 'regenerator-runtime/runtime';
-import AuthorizationContext from './context';
+import AuthorizationContext from '../assets/context';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
 const Main = () => {
-  const [authorization, setAuthorization] = useState(false);
+  const [authorization, setAuthorization] = useState('init');
   return (
     <React.StrictMode>
       <BrowserRouter>
