@@ -1,12 +1,14 @@
 // @ts-check
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import '../assets/application.scss';
 import 'core-js/stable/index';
 import 'regenerator-runtime/runtime';
 import AuthorizationContext from '../assets/context';
+import store from './store/store';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -18,7 +20,9 @@ const Main = () => {
     <React.StrictMode>
       <BrowserRouter>
         <AuthorizationContext.Provider value={{ authorization, setAuthorization }}>
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </AuthorizationContext.Provider>
       </BrowserRouter>
     </React.StrictMode>
