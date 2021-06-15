@@ -7,12 +7,12 @@ const currentChannel = createSlice({
     initCurrentChannel(_, action) {
       return action.payload;
     },
-    changeChannel(_, action) {
+    changeCurrentChannel(_, action) {
       return action.payload;
     },
   },
 });
 
-export const { changeChannel, initCurrentChannel } = currentChannel.actions;
+export const { changeCurrentChannel, initCurrentChannel } = currentChannel.actions;
 
 export default currentChannel.reducer;
