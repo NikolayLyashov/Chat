@@ -23,6 +23,7 @@ const Main = () => {
           <Provider store={store}>
             <App />
           </Provider>
+          {/* init выделить в отдельный модуль */}
         </AuthorizationContext.Provider>
       </BrowserRouter>
     </React.StrictMode>
