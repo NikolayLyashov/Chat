@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import io from 'socket.io-client';
-
-const socket = io();
+import socket from '../socket';
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
 
   const handleSubmit = (e) => {
-    socket.emit('test', 'hi');
     e.preventDefault();
+    socket.emit('test', 'hi', (res) => {
+      console.log(res.status);
+    });
     setInputMessage('');
   };
-  socket.on('test', (data) => {
-    console.log(data);
-  });
+  // socket.on('test', (data) => {
+  //   console.log(data);
+  // });
 
   return (
     <div className="col p-0 h-100">
