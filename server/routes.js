@@ -19,6 +19,7 @@ const buildState = (defaultState) => {
     currentChannelId: generalChannelId,
     users: [
       { id: 1, username: 'admin', password: 'admin' },
+      { id: 2, username: 'user', password: 'user' },
     ],
   };
 
@@ -84,12 +85,6 @@ export default (app, defaultState = {}) => {
 
       acknowledge({ status: 'ok' });
       app.io.emit('renameChannel', channel);
-    });
-
-    socket.on('test', (data) => {
-      app.io.emit('test', {
-        m: 'sad',
-      })
     });
 
   });

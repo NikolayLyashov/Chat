@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import userAuthorization from '../api';
-import AuthorizationContext from '../../assets/context';
+import AuthorizationContext from '../context';
 
 const RegistrationForm = () => {
   const { authorization, setAuthorization } = useContext(AuthorizationContext);

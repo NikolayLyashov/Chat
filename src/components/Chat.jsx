@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import socket from '../socket';
+import React, { useContext, useState } from 'react';
+import { useSelector } from 'react-redux';
+import ApiContext from '../apiContext';
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
+  const socket = useContext(ApiContext);
 
+  const messages = useSelector((state) => state.chatReducer.messages);
+  const userName = localStorage.getItem('username');
+
+  // console.log(socket);
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('test', 'hi', (res) => {
-      console.log(res.status);
+    socket.emit('newMessage', { message: inputMessage }, (res) => {
+      console.log(res);
     });
     setInputMessage('');
   };
-  // socket.on('test', (data) => {
-  //   console.log(data);
-  // });
 
   return (
     <div className="col p-0 h-100">
@@ -23,18 +26,13 @@ export const Chat = () => {
           <span className="text-muted">19 сообщений</span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-          <div className="text-break mb-2">
-            <b>admin</b>
-            : kjnjn
-          </div>
-          <div className="text-break mb-2">
-            <b>admin</b>
-            : sadsadsad
-          </div>
-          <div className="text-break mb-2">
-            <b>admin</b>
-            : dddddds
-          </div>
+          {messages.map(({ message, id}) => (
+            <div className="text-break mb-2" key={id}>
+              <b>{userName}</b>
+              :
+              {message}
+            </div>
+          ))}
         </div>
         <div className="border-top mt-auto py-3 px-5">
           <form onSubmit={handleSubmit} noValidate="" className="">
