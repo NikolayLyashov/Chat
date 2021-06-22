@@ -14,7 +14,6 @@ export const Home = () => {
   useEffect(async () => {
     const token = localStorage.getItem('token');
     const { data } = await axios.get('/api/v1/data', { headers: { Authorization: `Bearer ${token}` } });
-    console.log(data);
     dispatch(actions.setInitialState(data));
     setLoadingData(false);
   }, []);

@@ -1,18 +1,34 @@
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import { useSelector } from 'react-redux';
 import ApiContext from '../apiContext';
+import declinationNumbers from '../declinationNumbers';
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
   const socket = useContext(ApiContext);
 
   const messages = useSelector((state) => state.chatReducer.messages);
-  const userName = localStorage.getItem('username');
+  const channelId = useSelector((state) => state.channelsReducer.currentChannelId);
+  const channels = useSelector((state) => state.channelsReducer.channels);
 
-  // console.log(socket);
+  const username = localStorage.getItem('username');
+
+  const currentChannelName = channels.find(({ id }) => id === channelId).name;
+
+  const chatRef = useRef();
+
+  useEffect(() => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [messages]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('newMessage', { message: inputMessage }, (res) => {
+    socket.emit('newMessage', { body: inputMessage, username, channelId }, (res) => {
       console.log(res);
     });
     setInputMessage('');
@@ -22,15 +38,22 @@ export const Chat = () => {
     <div className="col p-0 h-100">
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
-          <p className="m-0"><b># general</b></p>
-          <span className="text-muted">19 сообщений</span>
+          <p className="m-0">
+            <b>
+              #
+              {currentChannelName}
+            </b>
+          </p>
+          <span className="text-muted">
+            { `${messages.length} ${declinationNumbers(messages.length, ['сообщение', 'сообщения', 'сообщений'])}`}
+          </span>
         </div>
-        <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-          {messages.map(({ message, id}) => (
+        <div id="messages-box" className="chat-messages overflow-auto px-5 " ref={chatRef}>
+          {messages.map(({ body, id, username: name }) => (
             <div className="text-break mb-2" key={id}>
-              <b>{userName}</b>
+              <b>{name}</b>
               :
-              {message}
+              {body}
             </div>
           ))}
         </div>
