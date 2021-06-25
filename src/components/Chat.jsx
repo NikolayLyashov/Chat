@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import React, {
   useContext,
   useState,
@@ -13,22 +14,28 @@ export const Chat = () => {
   const socket = useContext(ApiContext);
 
   const messages = useSelector((state) => state.chatReducer.messages);
-  const channelId = useSelector((state) => state.channelsReducer.currentChannelId);
+  const currentChannelId = useSelector((state) => state.channelsReducer.currentChannelId);
   const channels = useSelector((state) => state.channelsReducer.channels);
 
   const username = localStorage.getItem('username');
 
-  const currentChannelName = channels.find(({ id }) => id === channelId).name;
+  const currentChannelName = channels.find(({ id }) => id === currentChannelId).name;
+  const numberOfMessage = messages.filter(({ channelId }) => channelId === currentChannelId).length;
 
   const chatRef = useRef();
+  const input = useRef();
 
   useEffect(() => {
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [messages]);
 
+  useEffect(() => {
+    input.current.focus();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('newMessage', { body: inputMessage, username, channelId }, (res) => {
+    socket.emit('newMessage', { body: inputMessage, username, channelId: currentChannelId }, (res) => {
       console.log(res);
     });
     setInputMessage('');
@@ -45,22 +52,28 @@ export const Chat = () => {
             </b>
           </p>
           <span className="text-muted">
-            { `${messages.length} ${declinationNumbers(messages.length, ['сообщение', 'сообщения', 'сообщений'])}`}
+            { `${numberOfMessage} ${declinationNumbers(numberOfMessage, ['сообщение', 'сообщения', 'сообщений'])}`}
           </span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 " ref={chatRef}>
-          {messages.map(({ body, id, username: name }) => (
-            <div className="text-break mb-2" key={id}>
-              <b>{name}</b>
-              :
-              {body}
-            </div>
-          ))}
+          {messages.map(({ body, id, username: name, channelId }) => {
+            if (currentChannelId === channelId) {
+              return (
+                <div className="text-break mb-2" key={id}>
+                  <b>{name}</b>
+                  :
+                  {body}
+                </div>
+              );
+            }
+            return null;
+          })}
         </div>
         <div className="border-top mt-auto py-3 px-5">
           <form onSubmit={handleSubmit} noValidate="" className="">
             <div className="input-group">
               <input
+                ref={input}
                 name="inputMessage"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}

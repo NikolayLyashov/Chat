@@ -13,6 +13,10 @@ const init = (socket) => {
       store.dispatch(actions.newMessage(data));
     });
 
+    socket.on('newChannel', (data) => {
+      store.dispatch(actions.newChannel(data));
+    });
+
     const [authorization, setAuthorization] = useState('init');
     return (
       <React.StrictMode>

@@ -7,7 +7,7 @@ import cn from 'classnames';
 import userAuthorization from '../api';
 import AuthorizationContext from '../context';
 
-const RegistrationForm = () => {
+const AuthorizationForm = () => {
   const { authorization, setAuthorization } = useContext(AuthorizationContext);
   const formClass = cn('form-control', { 'is-invalid': authorization === 'failure' });
 
@@ -76,4 +76,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default AuthorizationForm;
