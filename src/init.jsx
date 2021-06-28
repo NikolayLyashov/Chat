@@ -17,6 +17,15 @@ const init = (socket) => {
       store.dispatch(actions.newChannel(data));
     });
 
+    socket.on('removeChannel', (data) => {
+      store.dispatch(actions.removeChannel(data));
+    });
+
+    socket.on('renameChannel', (data) => {
+      store.dispatch(actions.renameChannel(data));
+      console.log(data);
+    });
+
     const [authorization, setAuthorization] = useState('init');
     return (
       <React.StrictMode>

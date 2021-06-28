@@ -1,7 +1,4 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { actions } from '../store/slices';
 import { Channel } from './Channel';
@@ -10,7 +7,6 @@ export const Channels = () => {
   const dispatch = useDispatch();
 
   const { channels } = useSelector((state) => state.channelsReducer);
-  // const modal = useSelector((state) => state.modalReducer);
 
   return (
     <div className="col-2 px-0 pt-5 border-end bg-light">
@@ -24,9 +20,9 @@ export const Channels = () => {
           <span className="visually-hidden">+</span>
         </button>
       </div>
-      <ul className="nav flex-column nav-pills nav-fill">
-        {channels.map(({ id, name }) => (
-          <Channel key={id} id={id} name={name} />
+      <ul className="nav flex-column nav-pills nav-fill px-2">
+        {channels.map(({ id, name, removable }) => (
+          <Channel key={id} id={id} name={name} removable={removable} />
         ))}
       </ul>
     </div>

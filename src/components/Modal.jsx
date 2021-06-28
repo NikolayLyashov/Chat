@@ -16,6 +16,7 @@ export const Modal = () => {
   const socket = useContext(ApiContext);
 
   const modal = useSelector((state) => state.modalReducer);
+  const { channels } = useSelector((state) => state.channelsReducer);
   const dispatch = useDispatch();
 
   const inputRef = useRef();
@@ -25,23 +26,53 @@ export const Modal = () => {
   };
 
   const formik = useFormik({
-    initialValues: { newChannel: '' },
+    initialValues: { channelName: '' },
     validationSchema: Yup.object({
-      newChannel: Yup.string().min(3).required().max(20),
+      channelName: Yup.string().min(3).required().max(20),
     }),
-    onSubmit: (({ newChannel }) => {
-      socket.emit('newChannel', { name: newChannel }, () => {
+
+    onSubmit: (({ channelName }) => {
+      if (modal.type === 'renameChannel') {
+        socket.emit('renameChannel', { name: channelName, id: modal.extra.channelId }, () => {
+          console.log('test');
+        });
+        closeModal();
+        return;
+      }
+      socket.emit('newChannel', { name: channelName }, () => {
         console.log('test');
       });
-      dispatch(actions.isModal({ isOpen: false }));
+      closeModal();
     }),
+
     validateOnChange: false,
     validateOnBlur: false,
   });
 
   useEffect(() => {
-    inputRef.current.focus();
+    if (modal.type !== 'removeChannel') {
+      inputRef.current.focus();
+    }
+  });
+
+  useEffect(() => {
+    if (modal.type === 'renameChannel') {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
   }, []);
+
+  const removeChannel = () => {
+    if (modal.type === 'removeChannel') {
+      socket.emit('removeChannel', { id: modal.extra.channelId }, () => {
+        console.log('e');
+      });
+      const adminId = channels.find(({ name }) => name === 'general').id;
+      dispatch(actions.changeCurrentChannelID(adminId));
+    }
+
+    closeModal();
+  };
 
   return (
     <>
@@ -56,28 +87,39 @@ export const Modal = () => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-title h4">Добавить канал</div>
+              <div className="modal-title h4">{(modal.type === 'renameChannel') ? 'Переименовать канал' : 'Добавить канал' }</div>
               <button aria-label="Close" data-bs-dismiss="modal" type="button" className="btn btn-close" onClick={closeModal} />
             </div>
             <div className="modal-body">
-              <form className="" onSubmit={formik.handleSubmit}>
-                <div className="form-group">
-                  <input
-                    onChange={formik.handleChange}
-                    value={formik.values.newChannel}
-                    name="newChannel"
-                    data-testid="add-channel"
-                    className={cn('mb-2', 'form-control', { 'is-invalid': formik.submitCount && formik.errors.newChannel })}
-                    ref={inputRef}
-                    onBlur={formik.handleBlur}
-                  />
-                  {(formik.submitCount && formik.errors.newChannel) ? <div className="invalid-feedback"> От 3 до 20 символов </div> : null}
-                  <div className="d-flex justify-content-end">
-                    <button type="button" className="me-2 btn btn-secondary" onClick={closeModal}>Отменить</button>
-                    <button type="submit" className="btn btn-primary">Добавить</button>
-                  </div>
-                </div>
-              </form>
+              {(modal.type === 'removeChannel')
+                ? (
+                  <>
+                    <p className="lead">Уверены?</p>
+                    <div className="d-flex justify-content-end">
+                      <button type="button" className="me-2 btn btn-secondary" onClick={closeModal}>Отменить</button>
+                      <button type="button" className="btn btn-danger" onClick={removeChannel}>Удалить</button>
+                    </div>
+                  </>
+                ) : (
+                  <form className="" onSubmit={formik.handleSubmit}>
+                    <div className="form-group">
+                      <input
+                        onChange={formik.handleChange}
+                        value={formik.values.channelName}
+                        name="channelName"
+                        data-testid="add-channel"
+                        className={cn('mb-2', 'form-control', { 'is-invalid': formik.submitCount && formik.errors.channelName })}
+                        ref={inputRef}
+                        onBlur={formik.handleBlur}
+                      />
+                      {(formik.submitCount && formik.errors.channelName) ? <div className="invalid-feedback"> От 3 до 20 символов </div> : null}
+                      <div className="d-flex justify-content-end">
+                        <button type="button" className="me-2 btn btn-secondary" onClick={closeModal}>Отменить</button>
+                        <button type="submit" className="btn btn-primary">Отправить</button>
+                      </div>
+                    </div>
+                  </form>
+                )}
             </div>
           </div>
         </div>

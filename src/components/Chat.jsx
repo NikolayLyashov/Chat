@@ -31,7 +31,7 @@ export const Chat = () => {
 
   useEffect(() => {
     input.current.focus();
-  }, []);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
