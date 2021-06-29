@@ -1,5 +1,4 @@
-const home = (path) => (path || '');
-const login = `${home()}/login`;
-const signup = `${home()}/signup`;
+const login = '/login';
+const signup = '/signup';
 
-export default { home, login, signup };
+export default { login, signup };

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import signupImg from '../../assets/images/signup.jpeg';
+// import signupImg from '../../assets/images/signup.jpeg';
 import { Navigation } from '../components/Navigation';
 
 export const Signup = () => {
@@ -14,7 +14,7 @@ export const Signup = () => {
             <div className="card shadow-sm">
               <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
                 <div>
-                  <img src={signupImg} alt="signup" />
+                  {/* <img src={signupImg} alt="signup" /> */}
                 </div>
                 <form className="w-50">
                   <h1 className="text-center mb-4">Регистрация</h1>

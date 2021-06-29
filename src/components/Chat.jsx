@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import { useSelector } from 'react-redux';
-import ApiContext from '../apiContext';
+import ApiContext from '../context/apiContext';
 import declinationNumbers from '../declinationNumbers';
 
 export const Chat = () => {
@@ -35,8 +35,8 @@ export const Chat = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('newMessage', { body: inputMessage, username, channelId: currentChannelId }, (res) => {
-      console.log(res);
+    socket.emit('newMessage', { body: inputMessage, username, channelId: currentChannelId }, () => {
+
     });
     setInputMessage('');
   };
@@ -59,7 +59,7 @@ export const Chat = () => {
           {messages.map(({ body, id, username: name, channelId }) => {
             if (currentChannelId === channelId) {
               return (
-                <div className="text-break mb-2" key={id}>
+                <div className="text-break mb-2" key={`${id}-${name}`}>
                   <b>{name}</b>
                   :
                   {body}

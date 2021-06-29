@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
-import ApiContext from '../apiContext';
+import ApiContext from '../context/apiContext';
 import { actions } from '../store/slices';
 
 export const Modal = () => {
@@ -34,14 +34,16 @@ export const Modal = () => {
     onSubmit: (({ channelName }) => {
       if (modal.type === 'renameChannel') {
         socket.emit('renameChannel', { name: channelName, id: modal.extra.channelId }, () => {
-          console.log('test');
+
         });
         closeModal();
         return;
       }
+
       socket.emit('newChannel', { name: channelName }, () => {
-        console.log('test');
+
       });
+
       closeModal();
     }),
 
@@ -65,7 +67,7 @@ export const Modal = () => {
   const removeChannel = () => {
     if (modal.type === 'removeChannel') {
       socket.emit('removeChannel', { id: modal.extra.channelId }, () => {
-        console.log('e');
+
       });
       const adminId = channels.find(({ name }) => name === 'general').id;
       dispatch(actions.changeCurrentChannelID(adminId));

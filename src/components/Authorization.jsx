@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useContext } from 'react';
+import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
-import userAuthorization from '../api';
-import AuthorizationContext from '../context';
+import AuthorizationContext from '../context/AuthorizationContext';
 
 const AuthorizationForm = () => {
   const { authorization, setAuthorization } = useContext(AuthorizationContext);
@@ -22,7 +22,7 @@ const AuthorizationForm = () => {
     }),
 
     onSubmit: ({ username, password }) => {
-      userAuthorization(username, password)
+      axios.post('/api/v1/login', { username, password })
         .then(({ data }) => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', data.username);

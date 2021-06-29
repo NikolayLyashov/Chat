@@ -1,7 +1,7 @@
 {
-  "name": "@hexlet/code",
+  "name": "Chat",
   "version": "0.0.1",
-  "description": "",
+  "description": "Chat",
   "main": "src/index.js",
   "type": "module",
   "engines": {
