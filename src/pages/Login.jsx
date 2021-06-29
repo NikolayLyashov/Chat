@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Navigation } from '../components/Navigation';
 import Authorization from '../components/Authorization';
 
@@ -18,7 +19,7 @@ export const Login = () => (
             <div className="card-footer p-4">
               <div className="text-center">
                 <span>Нет аккаунта? </span>
-                <a href="/signup">Регистрация</a>
+                <Link to="/signup">Регистрация</Link>
               </div>
             </div>
           </div>
