@@ -5,6 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import ApiContext from '../context/apiContext';
 import declinationNumbers from '../declinationNumbers';
@@ -12,6 +13,8 @@ import declinationNumbers from '../declinationNumbers';
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
   const socket = useContext(ApiContext);
+
+  const { t } = useTranslation();
 
   const messages = useSelector((state) => state.chatReducer.messages);
   const currentChannelId = useSelector((state) => state.channelsReducer.currentChannelId);
@@ -62,7 +65,7 @@ export const Chat = () => {
                 <div className="text-break mb-2" key={`${id}-${name}`}>
                   <b>{name}</b>
                   :
-                  {body}
+                  {` ${body}`}
                 </div>
               );
             }
@@ -78,7 +81,7 @@ export const Chat = () => {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 data-testid="new-message"
-                placeholder="Введите сообщение..."
+                placeholder={t('chat.placeholder')}
                 className="border-0 form-control"
               />
               <div className="input-group-append">

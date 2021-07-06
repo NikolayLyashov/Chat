@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -8,8 +9,11 @@ import cn from 'classnames';
 import AuthorizationContext from '../context/AuthorizationContext';
 
 const AuthorizationForm = () => {
+  const { t } = useTranslation();
+
   const { authorization, setAuthorization } = useContext(AuthorizationContext);
   const formClass = cn('form-control', { 'is-invalid': authorization === 'failure' });
+  const inputRef = useRef();
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
@@ -27,21 +31,28 @@ const AuthorizationForm = () => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', data.username);
           setAuthorization('success');
-        }).catch(() => setAuthorization('failure'));
+        }).catch(() => {
+          setAuthorization('failure');
+        });
     },
   });
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   return (
     <>
       {authorization === 'success' ? <Redirect to="/" /> : null}
       <form onSubmit={formik.handleSubmit} className="w-50">
-        <h1 className="text-center mb-4">Войти</h1>
+        <h1 className="text-center mb-4">{t('loginForm.title')}</h1>
 
         <div className="form-floating mb-3 form-group">
           <input
+            ref={inputRef}
             name="username"
             type="username"
-            placeholder="Ваш ник"
+            placeholder={t('loginForm.name')}
             id="username"
             className={formClass}
             required
@@ -56,7 +67,7 @@ const AuthorizationForm = () => {
           <input
             name="password"
             type="password"
-            placeholder="Пароль"
+            placeholder={t('loginForm.password')}
             id="password"
             className={formClass}
             required
@@ -66,11 +77,11 @@ const AuthorizationForm = () => {
           />
           <label htmlFor="password">Пароль</label>
           <div className="invalid-tooltip">
-            Неверное имя пользвателя или пароль
+            {t('loginForm.error')}
           </div>
         </div>
 
-        <button type="submit" className="w-100 mb-3 btn btn-outline-primary">Войти</button>
+        <button type="submit" className="w-100 mb-3 btn btn-outline-primary">{t('loginForm.button')}</button>
       </form>
     </>
   );
