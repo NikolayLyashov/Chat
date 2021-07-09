@@ -1,34 +1,60 @@
-import React, { useState } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+/* eslint-disable object-curly-newline */
+/* eslint-disable react/prop-types */
+import React, { useContext, useState } from 'react';
+import {
+  Switch,
+  Route,
+  Redirect,
+  BrowserRouter,
+} from 'react-router-dom';
 import routes from './routes';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Navigation } from './components/Navigation';
-import AuthorizationContext from './context/AuthorizationContext';
+import AuthorizationContext from './context/AuthorizationContext.js';
+import useAuthorizationData from './useAuthorizationData';
 
-export const App = () => {
+const AuthProvider = ({ children }) => {
+  const userToken = localStorage.getItem('token');
+  const [userAuth, setUserAuth] = useState(userToken || null);
   const [authorization, setAuthorization] = useState('init');
 
   return (
-    <div className="d-flex flex-column h-100">
-      <>
-        <AuthorizationContext.Provider value={{ authorization, setAuthorization }}>
+    <AuthorizationContext.Provider
+      value={{ userAuth, setUserAuth, authorization, setAuthorization }}
+    >
+      {children}
+    </AuthorizationContext.Provider>
+  );
+};
+
+// const useAuthorizationData = () => useContext(AuthorizationContext);
+
+export const App = () => {
+  const PrivateRoute = ({ children }) => {
+    const { userAuth } = useAuthorizationData();
+    return (userAuth ? children : <Redirect to="/login" />);
+  };
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="d-flex flex-column h-100">
           <Navigation />
           <Switch>
-            <Route path="/signup">
+            <Route path={routes.signup}>
               <Signup />
             </Route>
             <Route path={routes.login}>
               <Login />
             </Route>
-            <Route path="/">
-              {localStorage.getItem('token') ? <Home /> : <Redirect to="/login" />}
-            </Route>
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
           </Switch>
-        </AuthorizationContext.Provider>
-      </>
-    </div>
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

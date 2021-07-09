@@ -8,7 +8,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import ApiContext from '../context/apiContext';
-import declinationNumbers from '../declinationNumbers';
+import useAuthorizationData from '../useAuthorizationData.js';
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState('');
@@ -24,6 +24,9 @@ export const Chat = () => {
 
   const currentChannelName = channels.find(({ id }) => id === currentChannelId).name;
   const numberOfMessage = messages.filter(({ channelId }) => channelId === currentChannelId).length;
+
+  // const data = useAuthorizationData();
+  // console.log(data);
 
   const chatRef = useRef();
   const input = useRef();
@@ -55,7 +58,7 @@ export const Chat = () => {
             </b>
           </p>
           <span className="text-muted">
-            { `${numberOfMessage} ${declinationNumbers(numberOfMessage, ['сообщение', 'сообщения', 'сообщений'])}`}
+            { t('messages.key', { count: numberOfMessage })}
           </span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 " ref={chatRef}>

@@ -35,5 +35,10 @@ export default
       placeholder: 'Введите сообщение...',
 
     },
+    messages: {
+      key_0: '{{count}} Сообщение',
+      key_1: '{{count}} Сообщения',
+      key_2: '{{count}} Сообщений',
+    },
   },
 };
