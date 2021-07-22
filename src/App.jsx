@@ -1,6 +1,5 @@
-/* eslint-disable object-curly-newline */
 /* eslint-disable react/prop-types */
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Switch,
   Route,
@@ -16,25 +15,48 @@ import AuthorizationContext from './context/AuthorizationContext.js';
 import useAuthorizationData from './useAuthorizationData';
 
 const AuthProvider = ({ children }) => {
-  const userToken = localStorage.getItem('token');
-  const [userAuth, setUserAuth] = useState(userToken || null);
+  const [userAuthName, setUserAuthName] = useState();
+  const [userAuth, setUserAuth] = useState();
   const [authorization, setAuthorization] = useState('init');
+
+  const logOut = () => {
+    localStorage.clear();
+    setUserAuth(null);
+  };
+
+  const setAuth = (data) => {
+    const { username, token } = data;
+
+    localStorage.setItem('username', username);
+    localStorage.setItem('token', token);
+
+    setUserAuthName(localStorage.getItem('username'));
+    setUserAuth(localStorage.getItem('token'));
+  };
 
   return (
     <AuthorizationContext.Provider
-      value={{ userAuth, setUserAuth, authorization, setAuthorization }}
+      value={{
+        userAuth,
+        setUserAuth,
+        authorization,
+        setAuthorization,
+        setAuth,
+        userAuthName,
+        setUserAuthName,
+        logOut,
+      }}
     >
       {children}
     </AuthorizationContext.Provider>
   );
 };
 
-// const useAuthorizationData = () => useContext(AuthorizationContext);
-
 export const App = () => {
   const PrivateRoute = ({ children }) => {
     const { userAuth } = useAuthorizationData();
-    return (userAuth ? children : <Redirect to="/login" />);
+
+    return (userAuth ? children : <Redirect to={routes.login} />);
   };
   return (
     <BrowserRouter>

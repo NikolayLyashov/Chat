@@ -4,6 +4,7 @@ import '../assets/application.scss';
 import 'core-js/stable/index';
 import 'regenerator-runtime/runtime';
 import init from './init';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min';
 
 const socket = io();
 

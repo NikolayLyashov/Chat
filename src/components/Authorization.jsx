@@ -7,11 +7,15 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import cn from 'classnames';
 import AuthorizationContext from '../context/AuthorizationContext';
+import useAuthorizationData from '../useAuthorizationData';
 
-const AuthorizationForm = () => {
+const Authorization = () => {
   const { t } = useTranslation();
 
+  const { setAuth } = useAuthorizationData();
+
   const { authorization, setAuthorization } = useContext(AuthorizationContext);
+
   const formClass = cn('form-control', { 'is-invalid': authorization === 'failure' });
   const inputRef = useRef();
 
@@ -28,8 +32,8 @@ const AuthorizationForm = () => {
     onSubmit: ({ username, password }) => {
       axios.post('/api/v1/login', { username, password })
         .then(({ data }) => {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('username', data.username);
+          setAuth(data);
+
           setAuthorization('success');
         }).catch(() => {
           setAuthorization('failure');
@@ -87,4 +91,4 @@ const AuthorizationForm = () => {
   );
 };
 
-export default AuthorizationForm;
+export default Authorization;

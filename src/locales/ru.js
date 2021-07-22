@@ -22,7 +22,7 @@ export default
       name: 'Ваш ник',
       password: 'Пароль',
       button: 'Войти',
-      description: 'Нет аккаунта?',
+      description: 'Нет аккаунта? ',
       registration: 'Регистрация',
       error: 'Неверное имя пользователя или пароль',
     },
@@ -33,7 +33,11 @@ export default
     channels: 'Каналы',
     chat: {
       placeholder: 'Введите сообщение...',
-
+      send: 'Отправить',
+    },
+    channel: {
+      delete: 'Удалить',
+      rename: 'Переименовать',
     },
     messages: {
       key_0: '{{count}} Сообщение',

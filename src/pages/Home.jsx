@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions } from '../store/slices';
 import { Channels } from '../components/Channels';
 import { Spinner } from '../components/Spinner';
 import { Chat } from '../components/Chat';
 import { Modal } from '../components/Modal';
+import useAuthorizationData from '../useAuthorizationData';
+import routes from '../routes.js';
 
 export const Home = () => {
   const dispatch = useDispatch();
   const [loadingData, setLoadingData] = useState(true);
 
   const modal = useSelector((state) => state.modalReducer);
+  const { userAuth: token } = useAuthorizationData();
 
   useEffect(async () => {
-    const token = localStorage.getItem('token');
-    const { data } = await axios.get('/api/v1/data', { headers: { Authorization: `Bearer ${token}` } });
-    // обработать ошибку
-    dispatch(actions.setInitialState(data));
-    setLoadingData(false);
+    try {
+      const { data } = await axios.get(routes.authorization, { headers: { Authorization: `Bearer ${token}` } });
+      dispatch(actions.setInitialState(data));
+      setLoadingData(false);
+      return null;
+    } catch (error) {
+      return <Redirect to="/login" />;
+    }
   }, []);
 
   if (loadingData) {
